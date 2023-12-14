@@ -18,6 +18,7 @@ public class PlotManager : MonoBehaviour
     float timer;
 
     Farmmanage fm;
+    PlantSell ps;
     public PlantObject selectedPlant;
     
 
@@ -37,7 +38,9 @@ public class PlotManager : MonoBehaviour
     void Start()
     {
         plot = GetComponent<SpriteRenderer>();
-        fm = FindAnyObjectByType<Farmmanage>();
+        plantCollider = transform.GetChild(0).GetComponent<BoxCollider2D>();
+        fm = transform.parent.GetComponent<Farmmanage>();
+        ps = transform.parent.GetComponent<PlantSell>();
     }
 
     // Update is called once per frame
@@ -58,16 +61,16 @@ public class PlotManager : MonoBehaviour
     private void OnMouseDown()
     {
         Debug.Log("Click");
-        if (isPlanted && plantStage == selectedPlant.plantStages.Length-1)
+        if (isPlanted)
         {
-            Harvest();
-        }
-        else if (!isPlanted)
-        {
-            if (isPreplot == true)
+            if (plantStage == selectedPlant.plantStages.Length - 1 && !fm.isPlanting)
             {
-                Plant(fm.selected_Plant);
+                Harvest();
             }
+        }
+        else if (fm.isPlanting && fm.selected_Plant.SE_plant.buyPrice <= fm.money)
+        {
+            Plant(fm.selected_Plant.SE_plant);
         }
 
 
@@ -95,6 +98,7 @@ public class PlotManager : MonoBehaviour
         
         isPlanted = false;
         plant.gameObject.SetActive(false);
+        selectedPlant.count_item++;
 
     }
 
@@ -103,6 +107,7 @@ public class PlotManager : MonoBehaviour
         selectedPlant = newPlant;
         isPlanted = true;
         plantStage = 0;
+        fm.Transaction(-selectedPlant.buyPrice);
         UpdatePlant();
         timer = selectedPlant.timeBtwStages;
         plant.gameObject.SetActive(true);
@@ -110,9 +115,9 @@ public class PlotManager : MonoBehaviour
 
     void UpdatePlant()
     {
-            plant.sprite = selectedPlant.plantStages[plantStage];
-            //plantCollider.size = plant.sprite.bounds.size;
-            //plantCollider.offset = new Vector2(0, plant.bounds.size.y / 2);
+        plant.sprite = selectedPlant.plantStages[plantStage];
+        plantCollider.size = plant.sprite.bounds.size;
+        plantCollider.offset = new Vector2(0, plant.bounds.size.y / 2);
     }
 }
 

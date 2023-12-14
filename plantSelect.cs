@@ -7,24 +7,33 @@ public class PlantSelected : MonoBehaviour
 {
     // Start is called before the first frame update
     public PlantObject SE_plant;
-    public Text Planttype;
     Farmmanage fm;
+    public Text nameTxt;
+    public Text priceTxt;
+    public Image icon;
+
+    public Image btnImage;
+    public Text btnTxt;
+
     void Start()
     {
-        fm = FindObjectOfType<Farmmanage>();
+        fm = FindAnyObjectByType<Farmmanage>();
+        InitializeUI();
     }
 
     // Update is called once per frame
-    void Update()
+    public void BuyPlant()
     {
-
+        Debug.Log("Bought " + SE_plant.plantname);
+        fm.SelectPlant(this);
     }
-    private void OnMouseDown()
+    void InitializeUI()
     {
-        Planttype.text = "Select : " + SE_plant.plantname;
-        fm.selected_Plant = SE_plant;  // Define plant for plot 
-
+        nameTxt.text = SE_plant.plantname;
+        priceTxt.text = "$" + SE_plant.buyPrice;
+        icon.sprite = SE_plant.icon;
     }
 }
+
 
 
