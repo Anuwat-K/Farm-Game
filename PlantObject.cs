@@ -12,5 +12,5 @@ public class PlantObject : ScriptableObject
     public int buyPrice;
     public int sellPrice;
     public Sprite icon;
-    public int count_item;
+    public int count_item = 0;
 }

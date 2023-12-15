@@ -17,7 +17,7 @@ public class PlantSell : MonoBehaviour
 
     void Start()
     {
-        plantsell.count_item = 0;
+        
         fm = FindAnyObjectByType<Farmmanage>();
         InitializeUI();
     }
